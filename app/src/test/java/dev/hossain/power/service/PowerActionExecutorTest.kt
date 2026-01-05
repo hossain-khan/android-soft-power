@@ -37,7 +37,7 @@ class PowerActionExecutorTest {
         mockkObject(PowerAccessibilityService)
         mockkStatic(Intent::class)
         mockkStatic(android.util.Log::class)
-        
+
         // Mock Log methods
         every { android.util.Log.d(any(), any()) } returns 0
         every { android.util.Log.w(any(), any<String>()) } returns 0

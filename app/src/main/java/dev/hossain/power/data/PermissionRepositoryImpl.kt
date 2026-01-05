@@ -92,7 +92,7 @@ class PermissionRepositoryImpl
         }
 
         override fun requestDeviceAdmin() {
-            val componentName = ComponentName(context, DEVICE_ADMIN_CLASS)
+            val componentName = ComponentName(context.packageName, DEVICE_ADMIN_CLASS)
             val intent =
                 Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
                     putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName)
@@ -130,7 +130,7 @@ class PermissionRepositoryImpl
          * Checks if device admin is active for this app.
          */
         private fun isDeviceAdminActive(): Boolean {
-            val componentName = ComponentName(context, DEVICE_ADMIN_CLASS)
+            val componentName = ComponentName(context.packageName, DEVICE_ADMIN_CLASS)
             return devicePolicyManager.isAdminActive(componentName)
         }
     }

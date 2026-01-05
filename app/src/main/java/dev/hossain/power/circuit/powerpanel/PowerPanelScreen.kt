@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,12 +84,19 @@ class PowerPanelPresenter
     ) : Presenter<PowerPanelScreen.State> {
         @Composable
         override fun present(): PowerPanelScreen.State {
-            val permissionState = remember { permissionRepository.getPermissionState() }
+            var permissionState by remember { mutableStateOf(permissionRepository.getPermissionState()) }
             val accessibilityService = PowerAccessibilityService.getInstance()
 
+            // Observe permission state changes
+            LaunchedEffect(Unit) {
+                permissionRepository.observePermissionState().collect { newState ->
+                    permissionState = newState
+                }
+            }
+
             // Determine available actions based on permissions
-            val actions by remember {
-                mutableStateOf(
+            val actions =
+                remember(permissionState) {
                     buildList {
                         // Lock Screen action - requires either accessibility or device admin
                         add(
@@ -144,9 +152,8 @@ class PowerPanelPresenter
                                 enabled = true,
                             ),
                         )
-                    },
-                )
-            }
+                    }
+                }
 
             return PowerPanelScreen.State(
                 actions = actions,

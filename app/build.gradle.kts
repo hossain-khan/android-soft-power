@@ -11,11 +11,11 @@ plugins {
 }
 
 android {
-    namespace = "app.example"
+    namespace = "dev.hossain.power"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "app.example"
+        applicationId = "dev.hossain.power"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
@@ -120,7 +120,6 @@ dependencies {
 
     implementation(libs.javax.inject)
 
-    implementation(libs.androidx.work)
 
     // Testing
     androidTestImplementation(libs.androidx.espresso.core)

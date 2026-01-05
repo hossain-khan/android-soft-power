@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import android.view.accessibility.AccessibilityManager
 import dev.hossain.power.di.ApplicationContext
 import dev.zacsweers.metro.AppScope
@@ -39,10 +40,12 @@ class PermissionRepositoryImpl
         }
 
         companion object {
-            // These class names will be implemented in issue #6
-            // Note: Using string names here since the actual classes don't exist yet
-            private const val ACCESSIBILITY_SERVICE_CLASS = "dev.hossain.power.service.PowerAccessibilityService"
-            private const val DEVICE_ADMIN_CLASS = "dev.hossain.power.admin.LockAdminReceiver"
+            private const val TAG = "PermissionRepository"
+
+            // Service class names using short format (relative to package name)
+            // Android's AccessibilityServiceInfo.id uses format: "packageName/.className"
+            private const val ACCESSIBILITY_SERVICE_CLASS = ".service.PowerAccessibilityService"
+            private const val DEVICE_ADMIN_CLASS = ".admin.LockAdminReceiver"
         }
 
         override fun getPermissionState(): PermissionState =
@@ -115,6 +118,11 @@ class PermissionRepositoryImpl
                 )
 
             val serviceId = "${context.packageName}/$ACCESSIBILITY_SERVICE_CLASS"
+            Log.d(TAG, "Looking for serviceId: $serviceId")
+            Log.d(TAG, "Enabled services count: ${enabledServices.size}")
+            enabledServices.forEach { service ->
+                Log.d(TAG, "Found enabled service: ${service.id}")
+            }
 
             return enabledServices.any { service ->
                 service.id == serviceId

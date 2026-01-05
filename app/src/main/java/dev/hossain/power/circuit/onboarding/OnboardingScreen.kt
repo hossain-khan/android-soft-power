@@ -1,11 +1,13 @@
 package dev.hossain.power.circuit.onboarding
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
@@ -20,6 +22,8 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.parcelize.Parcelize
+
+private const val TAG = "OnboardingPresenter"
 
 /**
  * Circuit screen for the onboarding wizard that guides users through permission setup.
@@ -102,6 +106,51 @@ class OnboardingPresenter
                             // No auto-advance for WELCOME and COMPLETE
                         }
                     }
+                }
+            }
+
+            // Refresh permission state when returning from system settings.
+            // The AccessibilityStateChangeListener only fires for global accessibility changes,
+            // not when a specific service is enabled, so we need to manually check on resume.
+            LifecycleResumeEffect(Unit) {
+                Log.d(TAG, "LifecycleResumeEffect triggered, currentStep=$currentStep")
+                val newState = permissionRepository.getPermissionState()
+                Log.d(TAG, "Permission state on resume: $newState")
+                permissionState = newState
+
+                // Auto-advance if permission was granted while in settings
+                when (currentStep) {
+                    OnboardingStep.ACCESSIBILITY -> {
+                        Log.d(TAG, "On ACCESSIBILITY step, accessibilityEnabled=${newState.accessibilityEnabled}")
+                        if (newState.accessibilityEnabled) {
+                            Log.d(TAG, "Advancing to OVERLAY step")
+                            currentStep = OnboardingStep.OVERLAY
+                        }
+                    }
+
+                    OnboardingStep.OVERLAY -> {
+                        Log.d(TAG, "On OVERLAY step, overlayEnabled=${newState.overlayEnabled}")
+                        if (newState.overlayEnabled) {
+                            Log.d(TAG, "Advancing to DEVICE_ADMIN step")
+                            currentStep = OnboardingStep.DEVICE_ADMIN
+                        }
+                    }
+
+                    OnboardingStep.DEVICE_ADMIN -> {
+                        Log.d(TAG, "On DEVICE_ADMIN step, deviceAdminEnabled=${newState.deviceAdminEnabled}")
+                        if (newState.deviceAdminEnabled) {
+                            Log.d(TAG, "Advancing to COMPLETE step")
+                            currentStep = OnboardingStep.COMPLETE
+                        }
+                    }
+
+                    else -> {
+                        Log.d(TAG, "On $currentStep step, no auto-advance")
+                    }
+                }
+
+                onPauseOrDispose {
+                    Log.d(TAG, "LifecycleResumeEffect paused/disposed")
                 }
             }
 

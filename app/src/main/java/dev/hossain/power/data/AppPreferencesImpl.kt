@@ -72,10 +72,84 @@ class AppPreferencesImpl
                 }
             }
 
+        override fun getButtonSize(): ButtonSize {
+            val sizeName = prefs.getString(KEY_BUTTON_SIZE, ButtonSize.MEDIUM.name)
+            return try {
+                ButtonSize.valueOf(sizeName ?: ButtonSize.MEDIUM.name)
+            } catch (e: IllegalArgumentException) {
+                ButtonSize.MEDIUM
+            }
+        }
+
+        override fun setButtonSize(size: ButtonSize) {
+            prefs
+                .edit()
+                .putString(KEY_BUTTON_SIZE, size.name)
+                .apply()
+        }
+
+        override fun observeButtonSize(): Flow<ButtonSize> =
+            callbackFlow {
+                // Send initial value
+                trySend(getButtonSize())
+
+                // Listen for changes
+                val listener =
+                    SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+                        if (key == KEY_BUTTON_SIZE) {
+                            trySend(getButtonSize())
+                        }
+                    }
+
+                prefs.registerOnSharedPreferenceChangeListener(listener)
+
+                awaitClose {
+                    prefs.unregisterOnSharedPreferenceChangeListener(listener)
+                }
+            }
+
+        override fun getLongPressAction(): LongPressAction {
+            val actionName = prefs.getString(KEY_LONG_PRESS_ACTION, LongPressAction.OPEN_PANEL.name)
+            return try {
+                LongPressAction.valueOf(actionName ?: LongPressAction.OPEN_PANEL.name)
+            } catch (e: IllegalArgumentException) {
+                LongPressAction.OPEN_PANEL
+            }
+        }
+
+        override fun setLongPressAction(action: LongPressAction) {
+            prefs
+                .edit()
+                .putString(KEY_LONG_PRESS_ACTION, action.name)
+                .apply()
+        }
+
+        override fun observeLongPressAction(): Flow<LongPressAction> =
+            callbackFlow {
+                // Send initial value
+                trySend(getLongPressAction())
+
+                // Listen for changes
+                val listener =
+                    SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+                        if (key == KEY_LONG_PRESS_ACTION) {
+                            trySend(getLongPressAction())
+                        }
+                    }
+
+                prefs.registerOnSharedPreferenceChangeListener(listener)
+
+                awaitClose {
+                    prefs.unregisterOnSharedPreferenceChangeListener(listener)
+                }
+            }
+
         companion object {
             private const val PREFS_NAME = "power_app_prefs"
             private const val KEY_BUTTON_X = "floating_button_x"
             private const val KEY_BUTTON_Y = "floating_button_y"
             private const val KEY_BUTTON_ENABLED = "floating_button_enabled"
+            private const val KEY_BUTTON_SIZE = "button_size"
+            private const val KEY_LONG_PRESS_ACTION = "long_press_action"
         }
     }

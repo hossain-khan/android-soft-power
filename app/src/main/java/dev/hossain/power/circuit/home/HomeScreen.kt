@@ -14,6 +14,7 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.hossain.power.circuit.onboarding.OnboardingScreen
 import dev.hossain.power.circuit.powerpanel.PowerPanelScreen
+import dev.hossain.power.circuit.settings.SettingsScreen
 import dev.hossain.power.data.AppPreferences
 import dev.hossain.power.data.PermissionRepository
 import dev.hossain.power.data.PermissionState
@@ -94,8 +95,7 @@ class HomePresenter
                     }
 
                     HomeScreen.Event.OpenSettings -> {
-                        // TODO: Navigate to settings screen when implemented
-                        // navigator.goTo(SettingsScreen)
+                        navigator.goTo(SettingsScreen)
                     }
 
                     HomeScreen.Event.OpenOnboarding -> {

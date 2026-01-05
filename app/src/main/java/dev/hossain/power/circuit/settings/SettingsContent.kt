@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.slack.circuit.codegen.annotations.CircuitInject
+import dev.hossain.power.BuildConfig
 import dev.hossain.power.data.ButtonSize
 import dev.hossain.power.data.LongPressAction
 import dev.hossain.power.data.PermissionState
@@ -373,7 +374,7 @@ private fun AboutSection(
                 },
                 supportingContent = {
                     Text(
-                        text = "v1.0.0",
+                        text = "v${BuildConfig.VERSION_NAME}",
                         style = MaterialTheme.typography.bodySmall,
                     )
                 },

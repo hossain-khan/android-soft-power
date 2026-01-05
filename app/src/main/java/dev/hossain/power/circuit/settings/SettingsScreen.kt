@@ -21,6 +21,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -75,24 +76,27 @@ class SettingsPresenter
             var buttonSize by remember { mutableStateOf(appPreferences.getButtonSize()) }
             var longPressAction by remember { mutableStateOf(appPreferences.getLongPressAction()) }
 
-            // Observe permission state changes
+            // Observe all state changes in a single coroutine scope
             LaunchedEffect(Unit) {
-                permissionRepository.observePermissionState().collect { newState ->
-                    permissionState = newState
+                // Observe permission state changes
+                launch {
+                    permissionRepository.observePermissionState().collect { newState ->
+                        permissionState = newState
+                    }
                 }
-            }
 
-            // Observe button size changes
-            LaunchedEffect(Unit) {
-                appPreferences.observeButtonSize().collect { newSize ->
-                    buttonSize = newSize
+                // Observe button size changes
+                launch {
+                    appPreferences.observeButtonSize().collect { newSize ->
+                        buttonSize = newSize
+                    }
                 }
-            }
 
-            // Observe long press action changes
-            LaunchedEffect(Unit) {
-                appPreferences.observeLongPressAction().collect { newAction ->
-                    longPressAction = newAction
+                // Observe long press action changes
+                launch {
+                    appPreferences.observeLongPressAction().collect { newAction ->
+                        longPressAction = newAction
+                    }
                 }
             }
 

@@ -52,7 +52,7 @@ class PermissionRepositoryTest {
         mockkStatic(Settings::class)
         mockkStatic(Log::class)
         mockkStatic(Uri::class)
-        
+
         // Mock Log methods to avoid RuntimeException
         every { Log.d(any(), any()) } returns 0
         every { Log.w(any(), any<String>()) } returns 0

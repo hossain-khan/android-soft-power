@@ -15,7 +15,7 @@ import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.sharedelements.SharedElementTransitionLayout
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
-import dev.hossain.power.circuit.InboxScreen
+import dev.hossain.power.circuit.home.HomeScreen
 import dev.hossain.power.circuit.onboarding.OnboardingScreen
 import dev.hossain.power.data.PermissionRepository
 import dev.hossain.power.di.ActivityKey
@@ -62,7 +62,7 @@ class MainActivity
                     val permissionState = permissionRepository.getPermissionState()
                     val initialScreen =
                         if (permissionState.isMinimallyConfigured) {
-                            InboxScreen
+                            HomeScreen
                         } else {
                             OnboardingScreen
                         }

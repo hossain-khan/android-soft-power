@@ -27,7 +27,7 @@ androidxWork = "2.11.0"
 truth = "1.4.4"
 turbine = "1.2.0"
 kotlinxCoroutinesTest = "1.10.1"
-mockk = "1.13.14"
+mockk = "1.14.7"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }

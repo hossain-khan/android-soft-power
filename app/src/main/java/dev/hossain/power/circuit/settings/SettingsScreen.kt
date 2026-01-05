@@ -1,5 +1,8 @@
 package dev.hossain.power.circuit.settings
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,11 +15,13 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
+import dev.hossain.power.circuit.about.AboutScreen
 import dev.hossain.power.data.AppPreferences
 import dev.hossain.power.data.ButtonSize
 import dev.hossain.power.data.LongPressAction
 import dev.hossain.power.data.PermissionRepository
 import dev.hossain.power.data.PermissionState
+import dev.hossain.power.di.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -69,7 +74,12 @@ class SettingsPresenter
         @Assisted private val navigator: Navigator,
         private val permissionRepository: PermissionRepository,
         private val appPreferences: AppPreferences,
+        @ApplicationContext private val context: Context,
     ) : Presenter<SettingsScreen.State> {
+        companion object {
+            private const val PRIVACY_POLICY_URL = "https://github.com/hossain-khan/android-soft-power/blob/main/PRIVACY.md"
+        }
+
         @Composable
         override fun present(): SettingsScreen.State {
             var permissionState by remember { mutableStateOf(permissionRepository.getPermissionState()) }
@@ -131,11 +141,15 @@ class SettingsPresenter
                     }
 
                     SettingsScreen.Event.OpenAbout -> {
-                        // TODO: Navigate to about screen when implemented
+                        navigator.goTo(AboutScreen)
                     }
 
                     SettingsScreen.Event.OpenPrivacyPolicy -> {
-                        // TODO: Open privacy policy URL
+                        val intent =
+                            Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL)).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                        context.startActivity(intent)
                     }
                 }
             }

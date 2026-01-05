@@ -12,6 +12,7 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
+import dev.hossain.power.circuit.about.AboutScreen
 import dev.hossain.power.circuit.onboarding.OnboardingScreen
 import dev.hossain.power.circuit.powerpanel.PowerPanelScreen
 import dev.hossain.power.circuit.settings.SettingsScreen
@@ -45,6 +46,8 @@ data object HomeScreen : Screen {
         data object OpenOnboarding : Event
 
         data object OpenPowerPanel : Event
+
+        data object OpenAbout : Event
     }
 }
 
@@ -104,6 +107,10 @@ class HomePresenter
 
                     HomeScreen.Event.OpenPowerPanel -> {
                         navigator.goTo(PowerPanelScreen)
+                    }
+
+                    HomeScreen.Event.OpenAbout -> {
+                        navigator.goTo(AboutScreen)
                     }
                 }
             }

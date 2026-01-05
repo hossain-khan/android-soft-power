@@ -26,9 +26,9 @@ interface LockScreenManager {
      * Locks the device screen immediately using Device Admin API.
      *
      * This method requires Device Admin to be enabled. Check [isDeviceAdminEnabled] first.
+     * If Device Admin is not enabled, this method will return false instead of throwing an exception.
      *
      * @return true if the lock action was performed successfully, false otherwise
-     * @throws SecurityException if Device Admin is not enabled for this app
      */
     fun lockScreen(): Boolean
 

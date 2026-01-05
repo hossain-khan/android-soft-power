@@ -37,7 +37,8 @@ class LockScreenManagerImpl
         }
 
         private val devicePolicyManager: DevicePolicyManager by lazy {
-            context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+            context.getSystemService(Context.DEVICE_POLICY_SERVICE) as? DevicePolicyManager
+                ?: throw IllegalStateException("DevicePolicyManager not available on this device")
         }
 
         private val adminComponent: ComponentName by lazy {

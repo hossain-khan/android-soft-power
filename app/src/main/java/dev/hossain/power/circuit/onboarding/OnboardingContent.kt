@@ -361,14 +361,6 @@ private fun PermissionStepCard(
             ) {
                 Text("Enable")
             }
-        } else {
-            FilledTonalButton(
-                onClick = { /* Already enabled, no action needed */ },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = false,
-            ) {
-                Text("Enabled")
-            }
         }
     }
 }

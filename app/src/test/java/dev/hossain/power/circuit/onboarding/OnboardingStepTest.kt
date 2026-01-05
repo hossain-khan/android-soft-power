@@ -9,13 +9,13 @@ import org.junit.Test
 class OnboardingStepTest {
     @Test
     fun `OnboardingStep has correct number of steps`() {
-        val steps = OnboardingStep.values()
+        val steps = OnboardingStep.entries
         assertEquals(5, steps.size)
     }
 
     @Test
     fun `OnboardingStep values are in correct order`() {
-        val steps = OnboardingStep.values()
+        val steps = OnboardingStep.entries
         assertEquals(OnboardingStep.WELCOME, steps[0])
         assertEquals(OnboardingStep.ACCESSIBILITY, steps[1])
         assertEquals(OnboardingStep.OVERLAY, steps[2])

@@ -12,7 +12,7 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
-import dev.hossain.power.circuit.InboxScreen
+import dev.hossain.power.circuit.home.HomeScreen
 import dev.hossain.power.data.PermissionRepository
 import dev.hossain.power.data.PermissionState
 import dev.zacsweers.metro.AppScope
@@ -139,7 +139,7 @@ class OnboardingPresenter
 
                     OnboardingScreen.Event.Complete -> {
                         // Navigate to home screen
-                        navigator.resetRoot(InboxScreen)
+                        navigator.resetRoot(HomeScreen)
                     }
                 }
             }

@@ -35,6 +35,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -115,6 +117,7 @@ private fun AppInfoSection(appVersion: String) {
             Text(
                 text = "⚡",
                 style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier.semantics { contentDescription = "Power icon" },
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -314,7 +317,8 @@ private fun PrivacyItem(text: String) {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp),
+                .padding(vertical = 4.dp)
+                .semantics(mergeDescendants = true) {},
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -322,6 +326,7 @@ private fun PrivacyItem(text: String) {
             text = "•",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier.semantics { contentDescription = "" },
         )
         Text(
             text = text,

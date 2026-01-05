@@ -148,17 +148,22 @@ class FloatingButtonService :
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
             )
 
+        val disableAction =
+            Notification.Action
+                .Builder(
+                    null,
+                    getString(R.string.notification_action_disable),
+                    disablePendingIntent,
+                ).build()
+
         return Notification
             .Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_text))
             .setSmallIcon(R.drawable.ic_notification)
             .setContentIntent(openAppPendingIntent)
-            .addAction(
-                0,
-                getString(R.string.notification_action_disable),
-                disablePendingIntent,
-            ).build()
+            .addAction(disableAction)
+            .build()
     }
 
     override fun onStartCommand(

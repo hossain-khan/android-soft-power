@@ -13,4 +13,39 @@
     <string name="notification_title">Power Button Active</string>
     <string name="notification_text">Tap to open app</string>
     <string name="notification_action_disable">Disable</string>
+    
+    <!-- About Screen -->
+    <string name="about_title">About &amp; Limitations</string>
+    <string name="about_app_name">Power Button Assist</string>
+    <string name="about_description">A software power button replacement for devices with broken or hard-to-use physical power buttons.</string>
+    
+    <!-- What This App Can Do -->
+    <string name="about_what_can_do_title">What This App Can Do</string>
+    <string name="about_can_lock_screen">Lock your screen instantly</string>
+    <string name="about_can_screen_off">Turn the screen off</string>
+    <string name="about_can_open_settings">Open power and system settings</string>
+    <string name="about_can_emergency_call">Make emergency calls</string>
+    <string name="about_can_floating_button">Provide a floating power button</string>
+    
+    <!-- What This App Cannot Do -->
+    <string name="about_what_cannot_do_title">What This App Cannot Do</string>
+    <string name="about_cannot_power_menu">Open the real Android power menu</string>
+    <string name="about_cannot_shutdown">Shut down your device</string>
+    <string name="about_cannot_restart">Restart your device</string>
+    <string name="about_cannot_power_controls">Access device power controls</string>
+    <string name="about_android_limitation">Android does not allow apps to perform these actions for security reasons. This is an Android limitation, not a limitation of this app.</string>
+    
+    <!-- Privacy Section -->
+    <string name="about_privacy_title">Privacy</string>
+    <string name="about_privacy_no_data">No personal data is collected</string>
+    <string name="about_privacy_no_screen_reading">No screen content is read</string>
+    <string name="about_privacy_no_tracking">No usage tracking</string>
+    <string name="about_privacy_accessibility">Accessibility is used only for power actions</string>
+    
+    <!-- Links Section -->
+    <string name="about_links_title">Links</string>
+    <string name="about_privacy_policy">Privacy Policy</string>
+    <string name="about_source_code">Source Code</string>
+    <string name="about_contact_support">Contact / Feedback</string>
+    <string name="about_app_version">App Version</string>
 </resources>

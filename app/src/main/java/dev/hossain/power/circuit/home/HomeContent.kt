@@ -89,7 +89,7 @@ fun HomeContent(
             )
 
             // Footer
-            FooterSection()
+            FooterSection(eventSink = state.eventSink)
 
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -298,7 +298,7 @@ private fun QuickActionsSection(
 }
 
 @Composable
-private fun FooterSection() {
+private fun FooterSection(eventSink: (HomeScreen.Event) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -309,7 +309,7 @@ private fun FooterSection() {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Spacer(modifier = Modifier.height(4.dp))
-        TextButton(onClick = { /* TODO: Navigate to about screen */ }) {
+        TextButton(onClick = { eventSink(HomeScreen.Event.OpenAbout) }) {
             Text(
                 text = "About & Limitations",
                 style = MaterialTheme.typography.bodySmall,

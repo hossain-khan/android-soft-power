@@ -38,6 +38,13 @@ class PermissionRepositoryImpl
             context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         }
 
+        companion object {
+            // These class names will be implemented in issue #6
+            // Note: Using string names here since the actual classes don't exist yet
+            private const val ACCESSIBILITY_SERVICE_CLASS = "dev.hossain.power.service.PowerAccessibilityService"
+            private const val DEVICE_ADMIN_CLASS = "dev.hossain.power.admin.LockAdminReceiver"
+        }
+
         override fun getPermissionState(): PermissionState =
             PermissionState(
                 accessibilityEnabled = isAccessibilityServiceEnabled(),
@@ -50,9 +57,9 @@ class PermissionRepositoryImpl
                 // Send initial state
                 trySend(getPermissionState())
 
-                // For now, we'll use a simple polling mechanism
-                // A more sophisticated implementation could use BroadcastReceiver or ContentObserver
-                // to listen for permission changes
+                // TODO: Currently only listens to accessibility state changes.
+                // Future improvement: Add listeners for overlay permission and device admin changes.
+                // This could be done via BroadcastReceiver or periodic polling.
                 val listener =
                     AccessibilityManager.AccessibilityStateChangeListener { enabled ->
                         trySend(getPermissionState())
@@ -85,10 +92,7 @@ class PermissionRepositoryImpl
         }
 
         override fun requestDeviceAdmin() {
-            // Note: This requires the actual admin receiver class to exist
-            // The class name should match the one declared in AndroidManifest.xml
-            // For now, using a placeholder component name
-            val componentName = ComponentName(context, "dev.hossain.power.admin.LockAdminReceiver")
+            val componentName = ComponentName(context, DEVICE_ADMIN_CLASS)
             val intent =
                 Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
                     putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName)
@@ -110,9 +114,7 @@ class PermissionRepositoryImpl
                     AccessibilityServiceInfo.FEEDBACK_ALL_MASK,
                 )
 
-            // Check if our service is in the list of enabled services
-            // The service class should be: dev.hossain.power.service.PowerAccessibilityService
-            val serviceId = "${context.packageName}/dev.hossain.power.service.PowerAccessibilityService"
+            val serviceId = "${context.packageName}/$ACCESSIBILITY_SERVICE_CLASS"
 
             return enabledServices.any { service ->
                 service.id == serviceId
@@ -128,7 +130,7 @@ class PermissionRepositoryImpl
          * Checks if device admin is active for this app.
          */
         private fun isDeviceAdminActive(): Boolean {
-            val componentName = ComponentName(context, "dev.hossain.power.admin.LockAdminReceiver")
+            val componentName = ComponentName(context, DEVICE_ADMIN_CLASS)
             return devicePolicyManager.isAdminActive(componentName)
         }
     }

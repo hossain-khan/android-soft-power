@@ -13,6 +13,7 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.hossain.power.circuit.onboarding.OnboardingScreen
+import dev.hossain.power.circuit.powerpanel.PowerPanelScreen
 import dev.hossain.power.data.AppPreferences
 import dev.hossain.power.data.PermissionRepository
 import dev.hossain.power.data.PermissionState
@@ -102,8 +103,7 @@ class HomePresenter
                     }
 
                     HomeScreen.Event.OpenPowerPanel -> {
-                        // TODO: Open power panel bottom sheet when implemented
-                        // This will be handled via overlay
+                        navigator.goTo(PowerPanelScreen)
                     }
                 }
             }

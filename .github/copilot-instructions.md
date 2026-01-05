@@ -1,28 +1,48 @@
 # Project Overview
 
-This is a template for an Android app using Jetpack Compose, designed to help you quickly set up a new project with best practices in mind. It includes features like dependency injection, Circuit UDF (Unidirectional Data Flow) architecture, and optional WorkManager integration.
+**Power Button Assist** is an Android app that provides a software power button replacement for users with broken or hard-to-use physical power buttons. It offers a floating overlay button with quick access to lock screen, screen off, and other power-related actions.
 
-The template is pre-configured with Circuit, a Compose-driven architecture for Kotlin and Android applications that provides a clean, unidirectional data flow pattern for building robust Android apps.
+The app is built with Jetpack Compose and follows the Circuit UDF (Unidirectional Data Flow) architecture with Metro for dependency injection.
+
+## Key Features
+- Floating draggable power button overlay
+- Quick Power Panel (bottom sheet) with power actions
+- Lock screen and screen off via Accessibility Service
+- Device Admin support for reliable locking
+- Permission onboarding wizard
 
 ## Project Structure
 
 ```
-android-compose-app-template/
+android-soft-power/
 ├── app/
 │   └── src/
-│       └── main/java/app/example/
-│           ├── CircuitApp.kt           # Main Application class
-│           ├── MainActivity.kt         # Main Activity with Circuit
-│           ├── circuit/                # Circuit screens and presenters
-│           │   ├── ExampleInboxScreen.kt
-│           │   ├── ExampleEmailDetailsScreen.kt
-│           │   └── overlay/            # Circuit overlays
-│           ├── data/                   # Repositories and data sources
-│           ├── di/                     # Metro dependency injection
-│           ├── work/                   # WorkManager workers
-│           └── ui/theme/               # Compose theme configuration
+│       └── main/java/dev/hossain/power/
+│           ├── PowerApp.kt              # Main Application class
+│           ├── MainActivity.kt          # Main Activity with Circuit
+│           ├── circuit/                 # Circuit screens and presenters
+│           │   ├── home/                # Home dashboard screen
+│           │   ├── onboarding/          # Permission setup wizard
+│           │   ├── powerpanel/          # Quick power actions sheet
+│           │   ├── settings/            # App settings screen
+│           │   └── about/               # About & limitations screen
+│           ├── service/
+│           │   ├── PowerAccessibilityService.kt  # Lock/screen-off actions
+│           │   └── FloatingButtonService.kt      # Overlay button service
+│           ├── admin/
+│           │   └── LockAdminReceiver.kt          # Device admin for lock
+│           ├── data/
+│           │   ├── PermissionRepository.kt       # Permission state tracking
+│           │   └── AppPreferences.kt             # User preferences
+│           ├── di/                      # Metro dependency injection
+│           └── ui/
+│               ├── theme/               # Compose theme configuration
+│               └── overlay/             # Floating button composables
+├── project-resources/
+│   ├── docs/                    # Project documentation
+│   └── google-play/             # Play Store assets
 └── gradle/
-    └── libs.versions.toml              # Centralized dependency versions
+    └── libs.versions.toml       # Centralized dependency versions
 ```
 
 ## Architecture Patterns
@@ -59,16 +79,20 @@ fun HomeContent(state: HomeScreen.State, modifier: Modifier = Modifier) {
 Example:
 ```kotlin
 // Define interface
-interface EmailRepository {
-    fun getEmails(): List<Email>
+interface PermissionRepository {
+    fun getPermissionState(): PermissionState
+    fun observePermissionState(): Flow<PermissionState>
 }
 
 // Implementation with Metro DI
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 @Inject
-class EmailRepositoryImpl constructor() : EmailRepository {
-    override fun getEmails() = listOf(/* emails */)
+class PermissionRepositoryImpl constructor(
+    private val context: Context
+) : PermissionRepository {
+    override fun getPermissionState() = // check permissions
+    override fun observePermissionState() = // observe changes
 }
 ```
 
@@ -200,6 +224,13 @@ All dependency versions are centralized in `gradle/libs.versions.toml`:
 - [Material 3 Design System](https://m3.material.io/)
 - [Material 3 Compose Components](https://developer.android.com/jetpack/compose/designsystems/material3)
 - [WorkManager Guide](https://developer.android.com/topic/libraries/architecture/workmanager)
+
+## Project Documentation
+
+- [Project Overview](project-resources/docs/PROJECT-OVERVIEW.md) - What the app does
+- [Project Plan](project-resources/docs/PROJECT-PLAN.md) - Implementation roadmap
+- [Project Idea](project-resources/docs/PROJECT-IDEA.md) - Original concept & UX specs
+- [Play Store Listing](project-resources/google-play/GOOGLE-PLAY-LISTING.md) - Store submission details
 
 ## Notes for AI Assistants
 

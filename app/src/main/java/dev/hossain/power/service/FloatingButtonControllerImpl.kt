@@ -1,8 +1,8 @@
 package dev.hossain.power.service
 
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import dev.hossain.power.data.AppPreferences
 import dev.hossain.power.di.ApplicationContext
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
@@ -18,6 +18,7 @@ import dev.zacsweers.metro.SingleIn
 class FloatingButtonControllerImpl
     constructor(
         @ApplicationContext private val context: Context,
+        private val appPreferences: AppPreferences,
     ) : FloatingButtonController {
         override fun startService() {
             val intent = Intent(context, FloatingButtonService::class.java)
@@ -30,10 +31,8 @@ class FloatingButtonControllerImpl
         }
 
         override fun isServiceRunning(): Boolean {
-            val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            @Suppress("DEPRECATION")
-            return activityManager.getRunningServices(Integer.MAX_VALUE).any { serviceInfo ->
-                serviceInfo.service.className == FloatingButtonService::class.java.name
-            }
+            // Check the preference state instead of using deprecated getRunningServices API
+            // The service state is managed via AppPreferences when started/stopped
+            return appPreferences.isFloatingButtonEnabled()
         }
     }

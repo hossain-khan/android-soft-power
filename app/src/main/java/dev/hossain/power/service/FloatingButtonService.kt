@@ -276,6 +276,7 @@ class FloatingButtonService :
     private fun snapToEdge(params: WindowManager.LayoutParams) {
         val displayMetrics = resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
+        val view = floatingView ?: return
 
         // Snap to nearest edge (left or right)
         val snapToLeft = params.x < screenWidth / 2
@@ -283,12 +284,10 @@ class FloatingButtonService :
             if (snapToLeft) {
                 16
             } else {
-                screenWidth - floatingView!!.width - 16
+                screenWidth - view.width - 16
             }
 
-        floatingView?.let { view ->
-            windowManager?.updateViewLayout(view, params)
-        }
+        windowManager?.updateViewLayout(view, params)
 
         // Save position
         buttonPosition = Point(params.x, params.y)

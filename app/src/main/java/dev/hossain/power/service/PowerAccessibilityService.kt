@@ -67,12 +67,23 @@ class PowerAccessibilityService : AccessibilityService() {
      *
      * This method requires:
      * - API 28+ (Android P)
-     * - Accessibility service to be enabled
+     * - Accessibility service to be enabled and connected
      *
      * @return true if the lock action was performed successfully, false otherwise
      */
-    fun performLockScreen(): Boolean =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    fun performLockScreen(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            Log.w(TAG, "Lock screen action requires API 28+, current: ${Build.VERSION.SDK_INT}")
+            return false
+        }
+
+        // Verify service is properly connected before attempting action
+        if (serviceInfo == null) {
+            Log.w(TAG, "Cannot perform lock screen action: service not properly initialized")
+            return false
+        }
+
+        return try {
             val result = performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
             if (result) {
                 Log.d(TAG, "Lock screen action performed successfully")
@@ -80,8 +91,9 @@ class PowerAccessibilityService : AccessibilityService() {
                 Log.w(TAG, "Failed to perform lock screen action")
             }
             result
-        } else {
-            Log.w(TAG, "Lock screen action requires API 28+, current: ${Build.VERSION.SDK_INT}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Exception while performing lock screen action", e)
             false
         }
+    }
 }

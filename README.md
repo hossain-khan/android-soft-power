@@ -67,9 +67,9 @@ Android does not allow apps to open the real power menu, shutdown, or restart th
 
 ## 📄 License
 
-[Add license]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👤 Author
 
-[Add author]
+**Hossain Khan**
 

@@ -23,6 +23,12 @@ lifecycleRuntimeKtx = "2.10.0"
 metro = "0.9.3"
 androidxWork = "2.11.0"
 
+# Testing libraries
+truth = "1.4.4"
+turbine = "1.2.0"
+kotlinxCoroutinesTest = "1.10.1"
+mockk = "1.13.14"
+
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -41,12 +47,20 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
+# Testing libraries
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
 # Circuit - ⚡️A Compose-driven architecture for Kotlin and Android applications.
 # https://github.com/slackhq/circuit/releases
 circuit-codegen = { group = "com.slack.circuit", name = "circuit-codegen", version.ref = "circuit" }
 circuit-codegen-annotations = { group = "com.slack.circuit", name = "circuit-codegen-annotations", version.ref = "circuit" }
 circuit-foundation = { group = "com.slack.circuit", name = "circuit-foundation", version.ref = "circuit" }
 circuit-overlay = { group = "com.slack.circuit", name = "circuit-overlay", version.ref = "circuit" }
+circuit-test = { group = "com.slack.circuit", name = "circuit-test", version.ref = "circuit" }
 circuitx-android = { group = "com.slack.circuit", name = "circuitx-android", version.ref = "circuit" }
 circuitx-effects = { group = "com.slack.circuit", name = "circuitx-effects", version.ref = "circuit" }
 circuitx-gestureNav = { group = "com.slack.circuit", name = "circuitx-gesture-navigation", version.ref = "circuit" }

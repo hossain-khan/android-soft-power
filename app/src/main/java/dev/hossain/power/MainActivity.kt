@@ -16,6 +16,8 @@ import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.sharedelements.SharedElementTransitionLayout
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import dev.hossain.power.circuit.InboxScreen
+import dev.hossain.power.circuit.onboarding.OnboardingScreen
+import dev.hossain.power.data.PermissionRepository
 import dev.hossain.power.di.ActivityKey
 import dev.hossain.power.ui.theme.PowerAppTheme
 import dev.zacsweers.metro.AppScope
@@ -47,6 +49,7 @@ import dev.zacsweers.metro.binding
 class MainActivity
     constructor(
         private val circuit: Circuit,
+        private val permissionRepository: PermissionRepository,
     ) : ComponentActivity() {
         @OptIn(ExperimentalSharedTransitionApi::class)
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +58,17 @@ class MainActivity
 
             setContent {
                 PowerAppTheme {
+                    // Determine initial screen based on permission state
+                    val permissionState = permissionRepository.getPermissionState()
+                    val initialScreen =
+                        if (permissionState.isMinimallyConfigured) {
+                            InboxScreen
+                        } else {
+                            OnboardingScreen
+                        }
+
                     // See https://slackhq.github.io/circuit/navigation/
-                    val backStack = rememberSaveableBackStack(root = InboxScreen)
+                    val backStack = rememberSaveableBackStack(root = initialScreen)
                     val navigator = rememberCircuitNavigator(backStack)
 
                     // See https://slackhq.github.io/circuit/circuit-content/

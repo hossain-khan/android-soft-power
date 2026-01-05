@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Power</string>
+    
+    <!-- Accessibility Service Description -->
+    <string name="accessibility_service_description">Power Button Assist uses accessibility features to provide a software power button replacement. This service allows you to lock your screen or turn off the display when your physical power button is broken or difficult to use. The service only performs actions when you explicitly interact with the app\'s floating button. No user data is collected or transmitted.</string>
+    
+    <!-- Device Admin Description -->
+    <string name="device_admin_description">Power Button Assist requires Device Administrator permission to reliably lock your device screen. This permission is only used for locking the screen when you tap the power button. The app cannot perform any other administrative actions and your device can be unlocked normally.</string>
 </resources>

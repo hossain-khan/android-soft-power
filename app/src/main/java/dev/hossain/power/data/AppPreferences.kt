@@ -42,4 +42,64 @@ interface AppPreferences {
      * @return Flow that emits true when enabled, false when disabled
      */
     fun observeFloatingButtonEnabled(): Flow<Boolean>
+
+    /**
+     * Gets the button size preference.
+     *
+     * @return Current button size setting
+     */
+    fun getButtonSize(): ButtonSize
+
+    /**
+     * Sets the button size preference.
+     *
+     * @param size The button size to set
+     */
+    fun setButtonSize(size: ButtonSize)
+
+    /**
+     * Observes changes to the button size preference.
+     *
+     * @return Flow that emits button size changes
+     */
+    fun observeButtonSize(): Flow<ButtonSize>
+
+    /**
+     * Gets the long press action preference.
+     *
+     * @return Current long press action setting
+     */
+    fun getLongPressAction(): LongPressAction
+
+    /**
+     * Sets the long press action preference.
+     *
+     * @param action The long press action to set
+     */
+    fun setLongPressAction(action: LongPressAction)
+
+    /**
+     * Observes changes to the long press action preference.
+     *
+     * @return Flow that emits long press action changes
+     */
+    fun observeLongPressAction(): Flow<LongPressAction>
+}
+
+/**
+ * Floating button size options.
+ */
+enum class ButtonSize {
+    SMALL,
+    MEDIUM,
+    LARGE,
+}
+
+/**
+ * Long press action options for the floating button.
+ */
+enum class LongPressAction {
+    LOCK_SCREEN,
+    SCREEN_OFF,
+    OPEN_PANEL,
 }

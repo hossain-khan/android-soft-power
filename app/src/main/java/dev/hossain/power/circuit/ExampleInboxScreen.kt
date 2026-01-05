@@ -25,11 +25,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import dev.hossain.power.R
-import dev.hossain.power.circuit.overlay.AppInfoOverlay
-import dev.hossain.power.data.Email
-import dev.hossain.power.data.ExampleAppVersionService
-import dev.hossain.power.data.ExampleEmailRepository
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.overlay.LocalOverlayHost
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -37,6 +32,11 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
+import dev.hossain.power.R
+import dev.hossain.power.circuit.overlay.AppInfoOverlay
+import dev.hossain.power.data.Email
+import dev.hossain.power.data.ExampleAppVersionService
+import dev.hossain.power.data.ExampleEmailRepository
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory

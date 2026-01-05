@@ -13,8 +13,7 @@ import dev.zacsweers.metro.createGraphFactory
  *
  * See https://zacsweers.github.io/metro/latest/dependency-graphs/ for more on creating graphs.
  */
-class PowerApp :
-    Application() {
+class PowerApp : Application() {
     /**
      * Lazily creates the Metro app graph using the factory pattern.
      *

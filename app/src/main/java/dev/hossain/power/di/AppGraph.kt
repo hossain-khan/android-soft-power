@@ -50,8 +50,6 @@ interface AppGraph {
      */
     val circuit: Circuit
 
-
-
     /**
      * Factory for creating the [AppGraph] with runtime inputs.
      *

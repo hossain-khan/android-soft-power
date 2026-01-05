@@ -6,4 +6,11 @@
     
     <!-- Device Admin Description -->
     <string name="device_admin_description">Power Button Assist requires Device Administrator permission to reliably lock your device screen. This permission is only used for locking the screen when you tap the power button. The app cannot perform any other administrative actions and your device can be unlocked normally.</string>
+    
+    <!-- Floating Button Service Notification -->
+    <string name="notification_channel_name">Floating Power Button</string>
+    <string name="notification_channel_description">Shows when the floating power button is active</string>
+    <string name="notification_title">Power Button Active</string>
+    <string name="notification_text">Tap to open app</string>
+    <string name="notification_action_disable">Disable</string>
 </resources>

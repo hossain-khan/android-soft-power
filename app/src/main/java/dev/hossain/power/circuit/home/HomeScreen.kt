@@ -13,8 +13,10 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.hossain.power.circuit.onboarding.OnboardingScreen
+import dev.hossain.power.data.AppPreferences
 import dev.hossain.power.data.PermissionRepository
 import dev.hossain.power.data.PermissionState
+import dev.hossain.power.service.FloatingButtonController
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
@@ -53,11 +55,13 @@ class HomePresenter
     constructor(
         @Assisted private val navigator: Navigator,
         private val permissionRepository: PermissionRepository,
+        private val appPreferences: AppPreferences,
+        private val floatingButtonController: FloatingButtonController,
     ) : Presenter<HomeScreen.State> {
         @Composable
         override fun present(): HomeScreen.State {
             var permissionState by remember { mutableStateOf(permissionRepository.getPermissionState()) }
-            var isFloatingButtonEnabled by remember { mutableStateOf(false) }
+            var isFloatingButtonEnabled by remember { mutableStateOf(appPreferences.isFloatingButtonEnabled()) }
 
             // Observe permission state changes
             LaunchedEffect(Unit) {
@@ -66,8 +70,12 @@ class HomePresenter
                 }
             }
 
-            // TODO: Observe floating button service state from preferences
-            // This will be implemented when FloatingButtonService is created
+            // Observe floating button enabled state
+            LaunchedEffect(Unit) {
+                appPreferences.observeFloatingButtonEnabled().collect { enabled ->
+                    isFloatingButtonEnabled = enabled
+                }
+            }
 
             return HomeScreen.State(
                 permissionState = permissionState,
@@ -75,9 +83,13 @@ class HomePresenter
             ) { event ->
                 when (event) {
                     HomeScreen.Event.ToggleFloatingButton -> {
-                        // TODO: Toggle floating button service
-                        // This will start/stop the FloatingButtonService
-                        isFloatingButtonEnabled = !isFloatingButtonEnabled
+                        val newState = !isFloatingButtonEnabled
+                        appPreferences.setFloatingButtonEnabled(newState)
+                        if (newState) {
+                            floatingButtonController.startService()
+                        } else {
+                            floatingButtonController.stopService()
+                        }
                     }
 
                     HomeScreen.Event.OpenSettings -> {

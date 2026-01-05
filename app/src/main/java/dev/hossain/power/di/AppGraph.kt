@@ -3,6 +3,7 @@ package dev.hossain.power.di
 import android.app.Activity
 import android.content.Context
 import com.slack.circuit.foundation.Circuit
+import dev.hossain.power.data.AppPreferences
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Multibinds
@@ -49,6 +50,11 @@ interface AppGraph {
      * See https://slackhq.github.io/circuit/
      */
     val circuit: Circuit
+
+    /**
+     * App preferences for storing user settings and state.
+     */
+    val appPreferences: AppPreferences
 
     /**
      * Factory for creating the [AppGraph] with runtime inputs.

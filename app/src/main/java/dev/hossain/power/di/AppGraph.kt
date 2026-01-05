@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import com.slack.circuit.foundation.Circuit
 import dev.hossain.power.data.AppPreferences
+import dev.hossain.power.service.HapticFeedbackManager
+import dev.hossain.power.service.PowerActionExecutor
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Multibinds
@@ -55,6 +57,16 @@ interface AppGraph {
      * App preferences for storing user settings and state.
      */
     val appPreferences: AppPreferences
+
+    /**
+     * Haptic feedback manager for providing tactile feedback.
+     */
+    val hapticFeedbackManager: HapticFeedbackManager
+
+    /**
+     * Power action executor for performing power-related actions.
+     */
+    val powerActionExecutor: PowerActionExecutor
 
     /**
      * Factory for creating the [AppGraph] with runtime inputs.

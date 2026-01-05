@@ -1,9 +1,6 @@
 package dev.hossain.power.circuit.powerpanel
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
@@ -15,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -25,12 +23,12 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.hossain.power.data.PermissionRepository
 import dev.hossain.power.di.ApplicationContext
-import dev.hossain.power.service.LockScreenManager
-import dev.hossain.power.service.PowerAccessibilityService
+import dev.hossain.power.service.PowerActionExecutor
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -80,12 +78,12 @@ class PowerPanelPresenter
         @Assisted private val navigator: Navigator,
         @ApplicationContext private val context: Context,
         private val permissionRepository: PermissionRepository,
-        private val lockScreenManager: LockScreenManager,
+        private val powerActionExecutor: PowerActionExecutor,
     ) : Presenter<PowerPanelScreen.State> {
         @Composable
         override fun present(): PowerPanelScreen.State {
             var permissionState by remember { mutableStateOf(permissionRepository.getPermissionState()) }
-            val accessibilityService = PowerAccessibilityService.getInstance()
+            val coroutineScope = rememberCoroutineScope()
 
             // Observe permission state changes
             LaunchedEffect(Unit) {
@@ -160,42 +158,35 @@ class PowerPanelPresenter
             ) { event ->
                 when (event) {
                     PowerPanelScreen.Event.LockScreen -> {
-                        // Try accessibility service first, then device admin
-                        val locked =
-                            accessibilityService?.performLockScreen() ?: false ||
-                                lockScreenManager.lockScreen()
-                        if (locked) {
-                            navigator.pop()
+                        coroutineScope.launch {
+                            val result = powerActionExecutor.lockScreen()
+                            if (result.isSuccess) {
+                                navigator.pop()
+                            }
                         }
                     }
 
                     PowerPanelScreen.Event.TurnScreenOff -> {
-                        // Use accessibility service to turn screen off
-                        val success = accessibilityService?.performLockScreen() ?: false
-                        if (success) {
-                            navigator.pop()
+                        coroutineScope.launch {
+                            val result = powerActionExecutor.turnScreenOff()
+                            if (result.isSuccess) {
+                                navigator.pop()
+                            }
                         }
                     }
 
                     PowerPanelScreen.Event.OpenPowerSettings -> {
-                        // Open system settings
-                        val intent =
-                            Intent(Settings.ACTION_SETTINGS).apply {
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            }
-                        context.startActivity(intent)
-                        navigator.pop()
+                        coroutineScope.launch {
+                            powerActionExecutor.openPowerSettings()
+                            navigator.pop()
+                        }
                     }
 
                     PowerPanelScreen.Event.EmergencyCall -> {
-                        // Open emergency dialer
-                        val intent =
-                            Intent(Intent.ACTION_DIAL).apply {
-                                data = Uri.parse("tel:")
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            }
-                        context.startActivity(intent)
-                        navigator.pop()
+                        coroutineScope.launch {
+                            powerActionExecutor.openEmergencyDialer()
+                            navigator.pop()
+                        }
                     }
 
                     PowerPanelScreen.Event.OpenAbout -> {

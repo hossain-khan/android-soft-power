@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,10 +34,18 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dev.hossain.power.MainActivity
 import dev.hossain.power.PowerApp
+import dev.hossain.power.PowerPanelActivity
 import dev.hossain.power.R
 import dev.hossain.power.data.AppPreferences
+import dev.hossain.power.service.HapticFeedbackManager
+import dev.hossain.power.service.PowerActionExecutor
 import dev.hossain.power.ui.overlay.FloatingPowerButton
 import dev.hossain.power.ui.theme.PowerAppTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 /**
@@ -64,9 +73,12 @@ class FloatingButtonService :
     private var initialTouchY = 0f
 
     private lateinit var appPreferences: AppPreferences
+    private lateinit var hapticFeedbackManager: HapticFeedbackManager
+    private lateinit var powerActionExecutor: PowerActionExecutor
     private val lifecycleRegistry = LifecycleRegistry(this)
     private val store = ViewModelStore()
     private val savedStateRegistryController = SavedStateRegistryController.create(this)
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     override val lifecycle: Lifecycle get() = lifecycleRegistry
     override val viewModelStore: ViewModelStore get() = store
@@ -82,6 +94,8 @@ class FloatingButtonService :
         // Get dependencies from app graph
         val app = application as PowerApp
         appPreferences = app.appGraph().appPreferences
+        hapticFeedbackManager = app.appGraph().hapticFeedbackManager
+        powerActionExecutor = app.appGraph().powerActionExecutor
 
         // Create notification channel
         createNotificationChannel()
@@ -98,6 +112,7 @@ class FloatingButtonService :
 
     override fun onDestroy() {
         removeFloatingButton()
+        serviceScope.cancel()
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         store.clear()
         Log.d(TAG, "FloatingButtonService destroyed")
@@ -311,19 +326,46 @@ class FloatingButtonService :
     }
 
     private fun handleTap() {
-        Log.d(TAG, "Floating button tapped - TODO: Open power panel")
-        // TODO: Open power panel bottom sheet
-        // This will be implemented when power panel is created
+        Log.d(TAG, "Floating button tapped - opening power panel")
+        hapticFeedbackManager.performTapFeedback()
+
+        // Launch PowerPanelActivity
+        val intent =
+            Intent(this, PowerPanelActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to open power panel", e)
+            Toast.makeText(this, "Failed to open power panel", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun handleLongPress() {
         Log.d(TAG, "Floating button long-pressed - performing lock screen")
-        // Lock screen via accessibility service
-        val accessibilityService = PowerAccessibilityService.getInstance()
-        if (accessibilityService != null) {
-            accessibilityService.performLockScreen()
-        } else {
-            Log.w(TAG, "Accessibility service not available for lock screen")
+        hapticFeedbackManager.performLongPressFeedback()
+
+        // Lock screen via PowerActionExecutor
+        serviceScope.launch {
+            val result = powerActionExecutor.lockScreen()
+            result.fold(
+                onSuccess = {
+                    Log.d(TAG, "Screen locked successfully")
+                    hapticFeedbackManager.performSuccessFeedback()
+                },
+                onFailure = { error ->
+                    Log.w(TAG, "Failed to lock screen: ${error.message}")
+                    hapticFeedbackManager.performErrorFeedback()
+                    Toast
+                        .makeText(
+                            this@FloatingButtonService,
+                            "Enable Accessibility Service or Device Admin to lock screen",
+                            Toast.LENGTH_LONG,
+                        ).show()
+                },
+            )
         }
     }
 
